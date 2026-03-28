@@ -1,7 +1,10 @@
 /*
- * Copyright (c) 2020 The ZMK Contributors
+ * Corne ZMK Keymap — converted from Oryx layout KWZw9
+ * 42 keys, 6 columns per side, 3 layers
  *
- * SPDX-License-Identifier: MIT
+ * Layer 0 — Base (QWERTY)
+ * Layer 1 — Numbers / F-keys  (tap = Space, hold = Layer 1)
+ * Layer 2 — Symbols           (tap = Backspace, hold = Layer 2)
  */
 
 #include <behaviors.dtsi>
@@ -9,48 +12,136 @@
 #include <dt-bindings/zmk/bt.h>
 
 / {
-        keymap {
-                compatible = "zmk,keymap";
-
-                default_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
-// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-//                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
-                        bindings = <
-   &kp ESC   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &kp TAB &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp LCTRL
-                  &mo 1 &kp LGUI &kp SPACE   &kp RET &mo 2 &mo 1
-                        >;
-                };
-                lower_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
-// | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-// | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp ESC    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &kp BSPC
-   &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &kp BACKSPACE
-                                    &trans  &kp LGUI       &kp SPACE      &kp RET  &trans   &kp RALT
-                        >;
-                };
-
-                raise_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-// | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp  ESC  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
-   &kp  TAB  &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &soft_off &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
-                             &trans &kp LGUI   &kp SPACE   &kp RET   &trans    &kp RALT
-                        >;
-                };
+    behaviors {
+        /*
+         * Tap = Tab, Hold = Left Ctrl
+         */
+        td_tab_lctl: tap_dance_tab_lctl {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp TAB>, <&kp LCTRL>;
         };
+
+        /*
+         * Tap = / (slash), Hold = Right Ctrl
+         */
+        ht_fslh_rctl: hold_tap_fslh_rctl {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <125>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        /*
+         * Tap = Z, Hold = Left Ctrl
+         */
+        ht_z_lctl: hold_tap_z_lctl {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <125>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        /*
+         * Left thumb — Tap = Space, Hold = momentary Layer 1
+         */
+        lt_spc_1: layer_tap_space_1 {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <125>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+
+        /*
+         * Right thumb — Tap = Backspace, Hold = momentary Layer 2
+         */
+        lt_bspc_2: layer_tap_bspc_2 {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <125>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        /* ─────────────────────────────────────────────────────────────
+         * Layer 0 — Base QWERTY
+         *
+         * ┌──────┬──────┬─────┬─────┬─────┬─────┐   ┌─────┬─────┬─────┬─────┬──────────┬──────┐
+         * │ ESC  │  Q   │  W  │  E  │  R  │  T  │   │  Y  │  U  │  I  │  O  │    P     │  \   │
+         * ├──────┼──────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼──────────┼──────┤
+         * │Tab/LC│  A   │  S  │  D  │  F  │  G  │   │  H  │  J  │  K  │  L  │    ;     │  '   │
+         * ├──────┼──────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼──────────┼──────┤
+         * │ LSFT │ Z/LC │  X  │  C  │  V  │  B  │   │  N  │  M  │  ,  │  .  │  //RCTL  │ RET  │
+         * └──────┴──────┴─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┴─────┴──────────┴──────┘
+         *                     │LALT │LGUI │SPC/ │   │BSPC/│RALT │LYR1 │
+         *                     │     │     │ L1  │   │ L2  │     │     │
+         *                     └─────┴─────┴─────┘   └─────┴─────┴─────┘
+         * ───────────────────────────────────────────────────────────── */
+        base_layer {
+            bindings = <
+                &kp ESC       &kp Q               &kp W  &kp E  &kp R  &kp T    &kp Y               &kp U     &kp I      &kp O    &kp P                     &kp BSLH
+                &td_tab_lctl  &kp A               &kp S  &kp D  &kp F  &kp G    &kp H               &kp J     &kp K      &kp L    &kp SEMI                  &kp SQT
+                &kp LSHFT     &ht_z_lctl LCTRL Z  &kp X  &kp C  &kp V  &kp B    &kp N               &kp M     &kp COMMA  &kp DOT  &ht_fslh_rctl RCTRL FSLH  &kp RET
+                                                  &kp LALT  &kp LGUI  &lt_spc_1 1 SPACE    &lt_bspc_2 2 BSPC  &kp RALT  &to 1
+            >;
+        };
+
+        /* ─────────────────────────────────────────────────────────────
+         * Layer 1 — Numbers / F-keys
+         *
+         * ┌──────┬──────┬─────┬─────┬─────┬─────┐   ┌─────┬─────┬─────┬─────┬──────────┬──────┐
+         * │ ESC  │  1   │  2  │  3  │  4  │  5  │   │  6  │  7  │  8  │  9  │    0     │  \   │
+         * ├──────┼──────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼──────────┼──────┤
+         * │ TAB  │  F1  │ F2  │ F3  │ F4  │ F5  │   │  ←  │  ↓  │  ↑  │  →  │    ;     │ DEL  │
+         * ├──────┼──────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼──────────┼──────┤
+         * │ LSFT │ Z/LC │ F7  │ F8  │ F9  │ F10 │   │ F11 │ F12 │  ,  │  .  │  //RCTL  │ RET  │
+         * └──────┴──────┴─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┴─────┴──────────┴──────┘
+         *                     │LALT │LGUI │(SPC/│   │BSPC/│RALT │  0  │
+         *                     │     │     │ L1) │   │ L2) │     │     │
+         *                     └─────┴─────┴─────┘   └─────┴─────┴─────┘
+         * ───────────────────────────────────────────────────────────── */
+        num_layer {
+            bindings = <
+                &kp ESC    &kp N1              &kp N2  &kp N3  &kp N4  &kp N5    &kp N6              &kp N7    &kp N8     &kp N9    &kp N0                    &kp BSLH
+                &kp TAB    &kp F1              &kp F2  &kp F3  &kp F4  &kp F5    &kp LEFT            &kp DOWN  &kp UP     &kp RIGHT &kp SEMI                  &kp DEL
+                &kp LSHFT  &ht_z_lctl LCTRL Z  &kp F7  &kp F8  &kp F9  &kp F10   &kp F11             &kp F12   &kp COMMA  &kp DOT   &ht_fslh_rctl RCTRL FSLH  &kp RET
+                                               &kp LALT  &kp LGUI  &lt_spc_1 1 SPACE    &lt_bspc_2 2 BSPC  &kp RALT  &kp N0
+            >;
+        };
+
+        /* ─────────────────────────────────────────────────────────────
+         * Layer 2 — Symbols
+         *
+         * ┌──────┬──────┬─────┬─────┬─────┬─────┐   ┌─────┬─────┬─────┬─────┬─────┬──────┐
+         * │ ESC  │  !   │  @  │  #  │  $  │  %  │   │  ^  │  &  │  *  │  (  │  )  │  \   │
+         * ├──────┼──────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼─────┼──────┤
+         * │ TAB  │  ~   │  _  │  /  │  {  │  (  │   │  )  │  }  │  \  │  -  │  +  │  |   │
+         * ├──────┼──────┼─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┼─────┼─────┼──────┤
+         * │ LSFT │ Z/LC │     │  C  │  [  │     │   │     │  ]  │  ,  │  _  │  =  │ RET  │
+         * └──────┴──────┴─────┼─────┼─────┼─────┤   ├─────┼─────┼─────┴─────┴─────┴──────┘
+         *                     │LALT │LCTL │SPC/ │   │(BSP/│RALT │     │
+         *                     │     │     │ L1  │   │ L2) │     │     │
+         *                     └─────┴─────┴─────┘   └─────┴─────┴─────┘
+         * ───────────────────────────────────────────────────────────── */
+        sym_layer {
+            bindings = <
+                &kp ESC    &kp EXCL            &kp AT     &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET           &kp AMPS  &kp STAR   &kp LPAR  &kp RPAR   &kp BSLH
+                &kp TAB    &kp TILDE           &kp UNDER  &kp FSLH  &kp LBRC  &kp LPAR     &kp RPAR            &kp RBRC  &kp BSLH   &kp MINUS &kp PLUS   &kp PIPE
+                &kp LSHFT  &ht_z_lctl LCTRL Z  &trans     &kp C     &kp LBKT  &trans       &trans              &kp RBKT  &kp COMMA  &kp UNDER &kp EQUAL  &kp RET
+                                               &kp LALT   &kp LCTRL &lt_spc_1 1 SPACE      &lt_bspc_2 2 BSPC  &kp RALT  &trans
+            >;
+        };
+    };
 };
